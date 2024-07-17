@@ -1,11 +1,6 @@
 
 #include "shared-mem.h"
 
-
-bool SharedMem::IsValid() const
-{
-    return m_mapHandle && m_sharedData;
-}
 void *SharedMem::GetMemory() const
 {
     return m_sharedData;
@@ -59,8 +54,10 @@ SharedMem::~SharedMem()
 
     CloseHandle(m_mapHandle);
 }
-
-
+bool SharedMem::IsValid() const
+{
+    return m_mapHandle && m_sharedData;
+}
 
 #else
 #include <fcntl.h>
@@ -113,13 +110,16 @@ SharedMem::SharedMem(const std::string &name, Permission permission, size_t size
     }
 }
 
-~SharedMem()
+SharedMem::~SharedMem()
 {
     munmap(m_sharedData, m_memorySize);
 
     shm_unlink(m_memoryKey.c_str());
 }
 
+bool SharedMem::IsValid() const
+{
+    return m_descriptor && m_sharedData;
+}
+
 #endif
-
-

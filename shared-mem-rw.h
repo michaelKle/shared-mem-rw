@@ -31,7 +31,7 @@ private:
 	static Napi::FunctionReference constructor;
 	Napi::Value Close(const Napi::CallbackInfo &info);
 	Napi::Value Memory(const Napi::CallbackInfo &info);
-	Napi::Value SharedMemory::Set(const Napi::CallbackInfo& info);
+	Napi::Value Set(const Napi::CallbackInfo &info);
 
 	std::unique_ptr<SharedMem> m_mem;
 };

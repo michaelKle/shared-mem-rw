@@ -6,8 +6,6 @@
 
 SharedMemory::SharedMemory(const Napi::CallbackInfo &info) : Napi::ObjectWrap<SharedMemory>(info)
 {
-	Napi::Env env = info.Env();
-
 	// Invoked as constructor: `new MyObject(...)`
 	if (info.Length() < 3)
 	{
@@ -60,7 +58,6 @@ SharedMemory::SharedMemory(const Napi::CallbackInfo &info) : Napi::ObjectWrap<Sh
 		Napi::Error::New(info.Env(), "[SharedMemory] Creating or accessing shared mem failed").ThrowAsJavaScriptException();
 		return;
 	}
-		
 
 	this->Value().Set("name", info[0]);
 	this->Value().Set("perm", info[1]);
@@ -69,11 +66,7 @@ SharedMemory::SharedMemory(const Napi::CallbackInfo &info) : Napi::ObjectWrap<Sh
 
 Napi::Object SharedMemory::Init(Napi::Env env, Napi::Object exports)
 {
-	Napi::Function func = DefineClass(env, "SharedMemory", {
-		InstanceMethod("close", &SharedMemory::Close),
-		InstanceMethod("mem", &SharedMemory::Memory),
-		InstanceMethod("set", &SharedMemory::Set)
-	});
+	Napi::Function func = DefineClass(env, "SharedMemory", {InstanceMethod("close", &SharedMemory::Close), InstanceMethod("mem", &SharedMemory::Memory), InstanceMethod("set", &SharedMemory::Set)});
 
 	Napi::FunctionReference *constructor = new Napi::FunctionReference();
 	*constructor = Napi::Persistent(func);
@@ -95,8 +88,6 @@ Napi::Value SharedMemory::Memory(const Napi::CallbackInfo &info)
 
 Napi::Value SharedMemory::Close(const Napi::CallbackInfo &info)
 {
-	Napi::Env env = info.Env();
-
 	m_mem.reset();
 
 	this->Value().Delete("name");
@@ -106,10 +97,9 @@ Napi::Value SharedMemory::Close(const Napi::CallbackInfo &info)
 	return Napi::Value();
 }
 
-Napi::Value SharedMemory::Set(const Napi::CallbackInfo& info) {
-	Napi::Env env = info.Env();
-
-	if (info.Length() < 2) 
+Napi::Value SharedMemory::Set(const Napi::CallbackInfo &info)
+{
+	if (info.Length() < 2)
 	{
 		Napi::Error::New(info.Env(), "[SharedMemory] Set needs offset and value").ThrowAsJavaScriptException();
 		return Napi::Value();
@@ -124,10 +114,9 @@ Napi::Value SharedMemory::Set(const Napi::CallbackInfo& info) {
 		Napi::Error::New(info.Env(), "[SharedMemory] argument 1 needs to be a valid mapValue").ThrowAsJavaScriptException();
 		return Napi::Value();
 	}
-	
+
 	auto offset = static_cast<uint8_t>((int64_t)info[0].As<Napi::Number>());
 	auto value = static_cast<uint8_t>((int64_t)info[1].As<Napi::Number>());
-
 
 	if (offset >= m_mem->Size())
 	{
@@ -135,7 +124,7 @@ Napi::Value SharedMemory::Set(const Napi::CallbackInfo& info) {
 		return Napi::Value();
 	}
 
-	auto u8ptr = static_cast<uint8_t*>(m_mem->GetMemory());
+	auto u8ptr = static_cast<uint8_t *>(m_mem->GetMemory());
 	u8ptr[offset] = value;
 
 	return Napi::Value();
