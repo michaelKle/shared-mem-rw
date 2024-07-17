@@ -1,0 +1,19 @@
+{
+  "name": "shared_mem_rw",
+  "version": "1.0.0",
+  "description": "A package to access shared memory",
+  "main": "addon.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/michaelKle/shared-mem-rw.git"
+  },
+  "author": "Michael",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/michaelKle/shared-mem-rw/issues"
+  },
+  "homepage": "https://github.com/michaelKle/shared-mem-rw#readme"
+}
